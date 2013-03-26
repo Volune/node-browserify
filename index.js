@@ -34,7 +34,8 @@ function Browserify (files) {
     this._expose = {};
     this._mapped = {};
     this._transforms = [];
-    
+    this._depsCache = {};
+
     [].concat(files).filter(Boolean).forEach(this.add.bind(this));
 }
 
@@ -163,7 +164,8 @@ Browserify.prototype.transform = function (t) {
 
 Browserify.prototype.deps = function (opts) {
     var self = this;
-    var d = mdeps(self.files, opts);
+    var cache = opts.useCache ? self._depsCache : null;
+    var d = mdeps(self.files, opts, cache);
     var tr = d.pipe(through(write));
     d.on('error', tr.emit.bind(tr, 'error'));
     return tr;
