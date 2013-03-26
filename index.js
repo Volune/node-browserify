@@ -61,7 +61,8 @@ Browserify.prototype.require = function (id, opts) {
         ));
         
         if (opts.expose) {
-            self.exports[file] = hash(file);
+            if (!opts.external)
+                self.exports[file] = hash(file);
             
             if (typeof opts.expose === 'string') {
                 self._expose[file] = opts.expose;
